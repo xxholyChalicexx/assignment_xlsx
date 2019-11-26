@@ -1,0 +1,5 @@
+django==2
+xlrd
+openpyxl
+python-decouple
+requests
