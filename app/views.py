@@ -67,22 +67,22 @@ def home(request):
         if form.is_valid():
             file = request.FILES['file']
             file_name = name_filter(request.FILES['file'].name)
-            if (file == '' or '.xlsx' not in file_name):
+            if (file == '' or '.xlsx' not in file_name): # incase the file is not uploaded or if it is not an execl sheet
                 return HttpResponse("No file uploaded Or wrong file format")
             file_path = os.path.join(settings.FILES_DIR, file_name)
             print(file_path)
             with open(file_path, 'wb+') as fp:
                 for chunk in request.FILES['file']:
                     fp.write(chunk)
-            address_list = fetch_address(file_path)
+            address_list = fetch_address(file_path)#fetching all the address from a excel sheet to python list
             print(address_list)
             long = 0
             lat = 0
             long_lat_list = []
             for i in address_list:
-                long,lat = get_long_lat(i)
+                long,lat = get_long_lat(i)# using api for getting the latitude and longitude
                 long_lat_list.append((long,lat))
-            write_address(file_path, long_lat_list)
+            write_address(file_path, long_lat_list)#writing the latitude and longitude of the respetive address
             return HttpResponse(f'<a href="media\Files\{file_name}" download>File Download</a>')
 
     else:
